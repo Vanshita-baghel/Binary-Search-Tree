@@ -1,0 +1,68 @@
+🧠 Key Concepts Used
+In-order Traversal of a BST yields nodes in sorted order.
+
+If two nodes are swapped, the in-order sequence will be violated at 1 or 2 places.
+
+🔍 Implementation Summary
+1. Tracking Pointers
+
+    first, middle, last, prev are used to identify misplaced nodes during traversal.
+
+    prev stores the previously visited node in in-order traversal.
+
+2. Detect Violations
+
+    While traversing:
+
+      If prev.val > current.val, it's a violation of BST properties.
+
+        First Violation: first = prev, middle = current
+
+        Second Violation: last = current
+
+3. Fix Swapped Nodes
+
+    After traversal:
+
+      If two violations occurred → swap first and last.
+
+      If one violation occurred → swap first and middle.
+
+CODE: 
+class Solution {
+    TreeNode first= null;
+    TreeNode last=null;
+    TreeNode middle= null;
+    TreeNode prev;
+    public void recoverTree(TreeNode root) {
+        prev= new TreeNode(Integer.MIN_VALUE);
+        inorder(root);
+        if(first!=null && last!=null){
+            int t= first.val;
+            first.val= last.val;
+            last.val= t;
+        } 
+        else if(first!=null && middle!=null){
+            int t= first.val;
+            first.val= middle.val;
+            middle.val= t;
+        }
+    }
+    public void inorder(TreeNode root){
+        if(root==null)  return;
+        inorder(root.left);
+      //processing the node to check if it is valid or not
+        if(prev!=null && root.val< prev.val){
+            if(first==null){
+                //first violation
+                first= prev;
+                middle= root;
+            }
+            else{
+                last= root;
+            }
+        }
+        prev= root;
+        inorder(root.right);
+    }
+}
