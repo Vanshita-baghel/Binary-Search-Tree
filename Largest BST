@@ -1,0 +1,40 @@
+THOUGHT PROCESS:
+
+For each node, we will traverse its left and right and maintain size maxValue and minValue.
+if left.maxValue < node.val and node.val < right.minValue --> it means it is a valid binary search tree and we will do the following :
+    * return a new data containing newSize= left.size+right.size+1, maxValue= Math.max(root.val, right.maxValue), minValue= Math.min(root.val, left.minVAlue);
+    * and we will use this new information for parent node
+else
+    * new information to be returned --> new size= left.size+right.size+1,   maxValue= Integer.MAX_VALUE(so that it never s=contributes to msximum size in future), minValue= Integer.MIN_VALUE
+
+
+👉CODE:
+class NodeVal{
+    public int size, maxVal, minVal;
+    NodeVal(int size, int maxVal, int minVal){
+        this.size=size;
+        this.maxVal= maxVal;
+        this.minVal= minVal;
+    }
+}
+class Solution {
+
+    // Return the size of the largest sub-tree which is also a BST
+    static int largestBst(Node root) {
+        // Write your code here
+        return helper(root).size;
+    }
+    
+    private static NodeVal helper(Node root){
+        if(root==null){
+            return new NodeVal(0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        }
+        NodeVal left= helper(root.left);
+        NodeVal right= helper(root.right);
+        
+        if(left.maxVal < root.data && root.data<right.minVal){
+            return new NodeVal(left.size + right.size + 1, Math.max(root.data, right.maxVal), Math.min(root.data, left.minVal));
+        }
+        return new NodeVal(Math.max(left.size, right.size), Integer.MAX_VALUE, Integer.MIN_VALUE);
+    }
+}
