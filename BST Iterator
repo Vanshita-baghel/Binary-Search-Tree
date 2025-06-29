@@ -1,0 +1,73 @@
+🧠 Key Concepts Used
+In-order traversal yields sorted elements in a BST.
+
+Use a stack to simulate the recursive traversal and maintain the current traversal state.
+
+🔍 Implementation Breakdown
+Stack Initialization (pushLeft)
+
+The constructor pushes all the leftmost nodes starting from the root to the stack.
+
+This prepares the stack to return the smallest element first.
+
+next() Function
+
+Pops the top node (current smallest).
+
+If that node has a right child, pushes all left descendants of that right child (i.e., pushLeft(node.right)).
+
+Ensures in-order traversal is maintained.
+
+hasNext() Function
+
+Returns true if there are more nodes to process (i.e., stack is not empty).
+
+
+⏱️ Time & Space Complexity
+Time:
+
+next(): Amortized O(1) per call over n operations.
+
+hasNext(): O(1)
+
+Space:
+
+O(h), where h is the height of the tree (due to the stack)
+
+🔁 Traversal Logic
+At any point, the stack contains the path to the next smallest unprocessed node.
+
+Mimics the in-order traversal efficiently without full recursion.
+
+📌 Important Points
+Only pushes left nodes to maintain in-order order.
+
+Space is optimized by not storing the entire traversal (lazy evaluation).
+
+Works for balanced and unbalanced BSTs.
+
+
+
+CODE:
+class BSTIterator {
+    Stack<TreeNode> st= new Stack<>();
+    public BSTIterator(TreeNode root) {
+        pushLeft(root);
+    }
+    
+    public int next() {
+        TreeNode node= st.pop();
+        if(node.right!=null)    pushLeft(node.right);
+        return node.val;
+    }
+    
+    public boolean hasNext() {
+        return !(st.isEmpty());
+    }
+    public void pushLeft(TreeNode root){
+        while(root!=null){
+            st.push(root);
+            root= root.left;
+        }
+    }
+}
